@@ -1,0 +1,3 @@
+[submodule "rtpengine"]
+	path = rtpengine
+	url = https://github.com/sipwise/rtpengine.git
