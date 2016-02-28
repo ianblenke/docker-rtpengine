@@ -32,15 +32,17 @@ Why? There are two docker phases to be concerned with here.
 
 Both the `Dockerfile` and the `run.sh` script will attempt to build a DKMS kernel module for rtpengine based on `uname -r`.
 
-Whatever the `uname -r` is at "build" time, the kernel version headers and kernel module for whatever docker host was used to build this image will try and use that version. If 
+## At build time
+
+Whatever the `uname -r` is at "build" time, the kernel version headers and kernel module for whatever docker host was used to build this image will try and use that version.
 
 The `FROM` line of the `Dockerfile` in this project is `ubuntu:14.04`, which means that any build host that is not also Ubuntu 14.04 will silently skip including that as part of the docker build (see the "`|| true`" in the `Dockerfile` for that step).
 
 All this is really doing is pre-building a kernel module for you to use at docker run time. This is a time-saver, but is not necessary.
 
-However...
+## At run time
 
-If you build this on any other Ubuntu or Debian flavor derivative host version, you should still be able to run this and it will properly build the DKMS kernel module before loading it and running the rtpengine daemon. This does take a little time.
+Regardless of the linux docker host flavor you _build_ this on, you should still be able to _run_ this on any Ubuntu or Debian flavor derivative host version, and it should properly build the DKMS kernel before loading it and running the rtpengine daemon. This does take a little time.
 
 Because the `Dockerfile` and `run.sh` script assume Ubuntu/Debian tooling, this will not work for any other linux docker host flavor.
 
