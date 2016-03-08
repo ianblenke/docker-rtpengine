@@ -3,6 +3,7 @@ version: '2'
 services:
   rtpengine:
     build: .
+    dockerfile: Dockerfile.fedora
     privileged: true
     network_mode: host
     environment:

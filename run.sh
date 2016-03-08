@@ -54,6 +54,7 @@ for interface in $INTERFACES; do
 	OPTIONS="$OPTIONS --interface=$interface"
 done
 
+mkdir -p /etc/default
 if [ ! -z "$TABLE" ]; then
 	echo "TABLE=$TABLE" > /etc/default/rtpengine-table
 fi
