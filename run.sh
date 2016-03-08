@@ -33,11 +33,26 @@ fi
 
 OPTIONS=""
 
-if [ ! -z "$INTERFACES" ]; then
-	for interface in $INTERFACES; do
-		OPTIONS="$OPTIONS --interface=$interface"
-	done
+if [ -z "$INTERFACES" ]; then
+
+  # Discover public and private IP for this instance
+  export PRIVATE_IPV4="${PRIVATE_IPV4:-$(ip addr show eth0 | grep 'inet ' | awk '{print $2}' | cut -d/ -f1)}"
+  [ -n "$PUBLIC_IPV4" ] || \
+    PUBLIC_IPV4="$(curl --fail -qs whatismyip.akamai.com)"
+  #    PUBLIC_IPV4="$(curl --fail -qsH 'Metadata-Flavor: Google' http://169.254.169.254/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip)}"
+  #    PUBLIC_IPV4="$(curl --fail -qs http://169.254.169.254/2014-11-05/meta-data/public-ipv4)"
+  #    PUBLIC_IPV4="$(curl --fail -qs ipinfo.io/ip)"
+  #    PUBLIC_IPV4="$(curl --fail -qs ipecho.net/plain)"
+  export PUBLIC_IPV4
+
+  export PUBLIC_IPV6="${PUBLIC_IPV6:-$(ip -6 addr show $(ip -6 route show default | grep -e '^default' | awk '{print $5}') | grep inet6 | grep global | awk '{print $2}' | grep -v -e '^::' | cut -d/ -f1)}"
+
+  INTERFACES="${PRIVATE_IPV4}!${PUBLIC_IPV4} ${PUBLIC_IPV6}"
 fi
+
+for interface in $INTERFACES; do
+	OPTIONS="$OPTIONS --interface=$interface"
+done
 
 if [ ! -z "$TABLE" ]; then
 	echo "TABLE=$TABLE" > /etc/default/rtpengine-table

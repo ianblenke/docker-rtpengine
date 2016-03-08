@@ -5,16 +5,13 @@ services:
     build: .
     privileged: true
     network_mode: host
-#    cap_add:
-#    - NET_ADMIN
     environment:
       # Comment the variables that you don't want to be used for the configuration
       RUN_RTPENGINE: "yes"
       #LISTEN_TCP: 25060
       #LISTEN_UDP: 12222
-      LISTEN_NG: 60000
-      LISTEN_CLI: 60001
-      INTERFACES: "127.0.0.1"
+      LISTEN_NG: 127.0.0.1:60000
+      LISTEN_CLI: 127.0.0.1:60001
       # INTERFACES: "internal/12.23.34.45 external/23.34.45.54"
       # INTERFACES: "12.23.34.45!23.34.45.56"
       TIMEOUT: 60
@@ -23,8 +20,8 @@ services:
       # TOS: 184
       TABLE: 40
       NO_FALLBACK: "yes"
-      PORT_MIN: 50000
-      PORT_MAX: 55000
+      PORT_MIN: 10000
+      PORT_MAX: 19999
       # REDIS: 127.0.0.1:6379
       # REDIS_DB: 1
       # REDIS_READ: 127.0.0.1:6379
