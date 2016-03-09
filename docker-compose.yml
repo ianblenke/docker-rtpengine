@@ -2,9 +2,10 @@
 version: '2'
 services:
   rtpengine:
-    build: .
-    dockerfile: Dockerfile.fedora
     privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile.centos7
     network_mode: host
     environment:
       # Comment the variables that you don't want to be used for the configuration

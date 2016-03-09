@@ -1,0 +1,28 @@
+FROM centos:5
+MAINTAINER Ian Blenke <ian@blenke.com>
+
+ADD rtpengine/ /rtpengine
+WORKDIR /rtpengine
+
+RUN touch ./debian/flavors/no_ngcp && \
+    yum -y install epel-release && \
+    yum -y install git glib2 glib2-devel gcc zlib zlib-devel openssl openssl-devel pcre pcre-devel libcurl libcurl-devel xmlrpc-c xmlrpc-c-devel hiredis-devel iptables-devel kernel kernel-devel && \
+    cd /rtpengine/daemon && \
+    make && \
+    cp -u rtpengine /usr/local/bin/ && \
+    cd /rtpengine/iptables-extension && \
+    make && \
+    cp -u libxt_RTPENGINE.so /lib64/xtables && \
+    if [ ! -d "/usr/lib/modules/$(uname -r)/build" ]; then \
+	echo "Could Not Find the Kernel Headers For The current Kernel.\n"; \
+	exit 0 ; \
+    fi && \
+    cd "/rtpengine/kernel-module" && \
+    make && \
+    cp -u xt_RTPENGINE.ko "/lib/modules/$(uname -r)/extra" && \
+    depmod -a
+
+ADD run.sh /run.sh
+RUN chmod 755 /run.sh
+
+CMD /run.sh

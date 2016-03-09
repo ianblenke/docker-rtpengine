@@ -1,4 +1,5 @@
-FROM ubuntu:14.04
+#precise
+FROM ubuntu:12.04
 MAINTAINER Ian Blenke <ian@blenke.com>
 
 ADD rtpengine/ /rtpengine

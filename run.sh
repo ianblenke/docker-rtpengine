@@ -1,4 +1,5 @@
 #! /bin/sh
+set -x
 RUNTIME=${1:-rtpengine}
 
 if [ -n "${FLUSH_IPTABLES}" ] ; then
