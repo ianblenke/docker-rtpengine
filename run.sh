@@ -19,14 +19,32 @@ fi
 if lsmod | grep xt_RTPENGINE || modprobe xt_RTPENGINE; then
   echo "rtpengine kernel module already loaded."
 else
-  # Build the kernel module for the docker run host
-  apt-get update -y
-  export DEBIAN_FRONTEND=noninteractive
-  apt-get install -y linux-headers-$(uname -r) linux-image-$(uname -r)
+  if which apt-get ; then
+    # Build the kernel module for the docker run host
+    apt-get update -y
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get install -y linux-headers-$(uname -r) linux-image-$(uname -r)
 
-  module-assistant update
-  module-assistant auto-install ngcp-rtpengine-kernel-source
-  modprobe xt_RTPENGINE
+    module-assistant update
+    module-assistant auto-install ngcp-rtpengine-kernel-source
+    modprobe xt_RTPENGINE
+  else
+    if which dnf || which yum ; then
+      cd /rtpengine/daemon
+      make
+      cp -u rtpengine /usr/local/bin/
+      cd /rtpengine/iptables-extension
+      make
+      cp -u libxt_RTPENGINE.so /lib64/xtables
+      cd /rtpengine/kernel-module
+      make
+      cp -u xt_RTPENGINE.ko "/lib/modules/$(uname -r)/extra"
+      depmod -a
+    else
+      echo "This script is not running on debian/ubuntu/centus/fedora, cannot attempt to build kernel module"
+      exit 1
+    fi
+  fi
 fi
 
 # Gradually fill the options of the command rtpengine which starts the RTPEngine daemon

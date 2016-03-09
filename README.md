@@ -6,7 +6,7 @@ Parts of this project were borrowed in part from Binan/rtpengine-docker
 
 ## Files
 
-- `Dockerfile` is an Ubuntu 14.04 based image that properly builds a first-class rtpengine runtime from source
+- `Dockerfile*` properly builds a first-class rtpengine runtime from source
 - `Makefile` merely calls `docker-compose build` and `docker-compose up` for local iteration convenience.
 - `README.md` is the file you are reading right now.
 - `docker-compose.yml` is a v2 config example, with some pre-defined defaults and a list of environment variables.
@@ -19,9 +19,7 @@ This repository assumes that the resultant docker container will be run as privi
 
 ## Build and Run
 
-If you are running an Ubuntu or Debian docker host, you should be able to `docker-compose up` and it should just work.
-
-If you are running an RPM based distro, check out Binan/rtpengine-docker which is tested on Fedora.
+If you are running an Ubuntu, Debian, Centos, or Fedora docker host, you should be able to `docker-compose up` and it should just work.
 
 If you are running any other linux flavor as your docker host, this repository is not going to work for you as-is.
 
@@ -36,13 +34,13 @@ Both the `Dockerfile` and the `run.sh` script will attempt to build a DKMS kerne
 
 Whatever the `uname -r` is at "build" time, the kernel version headers and kernel module for whatever docker host was used to build this image will try and use that version.
 
-The `FROM` line of the `Dockerfile` in this project is `ubuntu:14.04`, which means that any build host that is not also Ubuntu 14.04 will silently skip including that as part of the docker build (see the "`|| true`" in the `Dockerfile` for that step).
+The `FROM` line of the `Dockerfile` in this project is `centos7`, which means that any build host that is not also Centos7 will silently skip including that as part of the docker build (see the "`|| true`" in the `Dockerfile` for that step).
 
 All this is really doing is pre-building a kernel module for you to use at docker run time. This is a time-saver, but is not necessary.
 
 ## At run time
 
-Regardless of the linux docker host flavor you _build_ this on, you should still be able to _run_ this on any Ubuntu or Debian flavor derivative host version, and it should properly build the DKMS kernel before loading it and running the rtpengine daemon. This does take a little time.
+Regardless of the linux docker host flavor you _build_ this on, you should still be able to _run_ this on any same Ubuntu or Debian flavor derivative host version, and it should properly build the DKMS kernel before loading it and running the rtpengine daemon. This does take a little time.
 
 Because the `Dockerfile` and `run.sh` script assume Ubuntu/Debian tooling, this will not work for any other linux docker host flavor.
 
