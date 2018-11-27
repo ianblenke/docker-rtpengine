@@ -19,7 +19,18 @@ This repository assumes that the resultant docker container will be run as privi
 
 ## Build and Run
 
-If you are running an Ubuntu, Debian, Centos, or Fedora docker host, you should be able to `docker-compose up` and it should just work.
+First, initialize the git submodules:
+
+    git submodule update --init --recursive
+
+If you are running an Ubuntu, Debian, Centos, or Fedora docker host, you should now be able to:
+
+    docker-compose up
+
+After this first build, though, you'll want to do subsequent updated builds using:
+
+    docker-compose build
+    docker-compose up --force-recreate
 
 If you are running any other linux flavor as your docker host, this repository is not going to work for you as-is.
 
@@ -43,4 +54,5 @@ All this is really doing is pre-building a kernel module for you to use at docke
 Regardless of the linux docker host flavor you _build_ this on, you should still be able to _run_ this on any same Ubuntu or Debian flavor derivative host version, and it should properly build the DKMS kernel before loading it and running the rtpengine daemon. This does take a little time.
 
 Because the `Dockerfile` and `run.sh` script assume Ubuntu/Debian tooling, this will not work for any other linux docker host flavor.
+
 
